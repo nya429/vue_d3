@@ -1,7 +1,9 @@
 <template>
   <div class="canvas">
     <h3>Data Visulization HW1 P1</h3>
-    <button>Click</button>
+    <button>Stack</button>
+    <button>Band</button>
+    <button>Slop</button>
     <svg id="canvas"></svg>
   </div>
 </template>
@@ -37,7 +39,29 @@ export default {
     }
   },
   methods: {
-    renderChart() {
+    renderBandChart() {
+      const variableNames = [
+        "calories",
+        "protein",
+        "fat",
+        "sodium",
+        "fiber",
+        "carbo",
+        "sugars",
+        "potass",
+        "vitamins"
+      ];
+
+      const numVariables = variableNames.length;
+      const numCases = this.csvData.length;
+      const xz = d3.range(numCases);
+      
+      const yz = d3.range(numVariables).map(i => {
+        const key = variableNames[i];
+        return this.csvData.map(d => d[key]);
+      });
+    },
+    renderStackChart() {
       const variableNames = [
         "calories",
         "protein",
@@ -102,7 +126,7 @@ export default {
           .attr("transform", "rotate(-65)");
 
       const svg = d3.select("#canvas");
-      const rect = svg
+      const rect = this.svg
         .selectAll("g")
         .data(y01z)
         .enter()
@@ -117,7 +141,7 @@ export default {
         .attr("width", x.bandwidth())
         .attr("height", 0);
 
-      svg.append("g").call(xAxis);
+      this.svg.append("g").call(xAxis);
 
       y.domain([0, y1Max]);
 
@@ -139,23 +163,6 @@ export default {
         .attr("width", this.base.width)
         .attr("height", this.base.height);
       this.svg = svg;
-      // const rect = svg
-      //   .selectAll("g")
-      //   .data(this.csvData)
-      //   .join("g")
-      //   .attr("fill", (d, i) => z(i))
-      //   .selectAll("rect")
-      //   .data(d => d)
-      //   .join("rect")
-      //   .attr("x", (d, i) => x(i))
-      //   .attr("y", height - margin.bottom)
-      //   .attr("width", x.bandwidth())
-      //   .attr("height", 0);
-      // svg
-      //   .append("rect")
-      //   .attr("width", "100%")
-      //   .attr("height", "100%")
-      //   .attr("fill", "pink");
     }
   },
   mounted() {
