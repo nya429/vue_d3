@@ -1,7 +1,6 @@
 <template>
   <div id="root">
-    <Canvas :csv-data='csv_data'
-    :variables='variableNames' />
+    <Canvas :csv-data='csv_data' :variables='variableNames' />
   </div>
 </template>
 
@@ -21,16 +20,16 @@ export default {
         "name",
         "mfr",
         "type",
-        "calories",
-        "protein",
-        "fat",
-        "sodium",
-        "fiber",
-        "carbo",
-        "sugars",
+        "Calories",
+        "Protein",
+        "Fat",
+        "Sodium",
+        "Fiber",
+        "Carbohydrates",
+        "Sugars",
         "shelf",
-        "potass",
-        "vitamins",
+        "Potassium",
+        "Vitamins",
         "weight",
         "cups"
       ],
@@ -42,7 +41,7 @@ export default {
       const raw = await d3.text("cereal.csv");
       const textString = raw
         .split("\n")
-        .slice(20)
+        .slice(0, 15)
         .filter(s => !s.includes("-1"))
         .join("\n");
       const headers = this.variableNames.join("\t") + "\n";
@@ -54,8 +53,9 @@ export default {
     }
   },
   async beforeMount() {
-    this.csv_data = await this.loadData();
-    console.log("CSV loaded", this.csv_data);
+    const raw_data = await this.loadData();
+    this.csv_data = raw_data;
+    // console.log("CSV loaded", this.csv_data);
   }
 };
 </script>
