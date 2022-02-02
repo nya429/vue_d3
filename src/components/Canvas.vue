@@ -48,7 +48,7 @@ export default {
       marginSlop: {
         top: 100,
         right: 300,
-        bottom: 10,
+        bottom: 40,
         left: 300
       },
       base: {
@@ -138,19 +138,25 @@ export default {
           .attr("stroke-width", 3);
         // .style("opacity", 1);
       };
-      const mousemove = function(e, d) {
-        // Tooltip.style("left", d3.pointer(e)[0] + 70 + "px").style(
-        //   "top",
-        //   d3.pointer(e)[1] + "px"
-        // );
-      };
+      const mousemove = function(e, d) {};
       const mouseleave = function() {
         // Tooltip.style("opacity", 0);
         thatSvg
           .selectAll(".g-line path")
           .attr("stroke", "black")
           .attr("stroke-width", 1);
-        d3.select(this).style("opacity", 0.5);
+        // .style("opacity", 0.5);
+
+        thatSvg
+          .selectAll(".g-text text")
+          .style("opacity", 1)
+          .attr("stroke", "none");
+
+        d3
+          .select(this)
+          .style("opacity", 0.8)
+          .attr("stroke-width", 1)
+          .attr("stroke", "none");
       };
       console.log("slop");
       let data = [...this.csvData];
@@ -265,7 +271,8 @@ export default {
               : i === xDomain.size - 1 ? i => `${Y[i]} ${Z[i]}` : i => Y[i]
           )
           // .attr("fill", "none")
-          .style("font-size", "0.7em");
+          .style("font-size", "0.7em")
+          .style("opacity", 0.8);
         // .call(dodgeAttr, "y", i => yScale(Y[i]), labelSeparation)
         // .attr("dy", "0.7em")
         // .attr(
@@ -283,16 +290,32 @@ export default {
         .selectAll(".g-text text")
         .on("mouseover", function(e, i) {
           // Tooltip.html("Brand: ").style("opacity", 1);
-          console.log();
           d3
             .select(this)
-            .style("stroke", "black")
+            .attr("stroke", "black")
             .style("opacity", 1);
+          const datalen = data.length;
+          thatSvg
+            .selectAll(".g-text text")
+            .filter((d, idx) => (idx % datalen) !== i)
+            .style("opacity", 0.3);
+
+          thatSvg
+            .selectAll(".g-text text")
+            .filter((d, idx) => (idx % datalen) === i )
+            .attr("stroke", "black")
+            .style("opacity", 1);
+
+          thatSvg
+            .selectAll(".g-line path")
+            .filter((d, idx) => i !== idx)
+            .style("opacity", 0.3);
 
           thatSvg
             .selectAll(".g-line path")
             .filter((d, idx) => i === idx)
             .attr("stroke", "red")
+            .style("opacity", 1)
             .attr("stroke-width", 3);
         })
         .on("mousemove", (e, d) => mousemove(e, d))
