@@ -7,7 +7,6 @@
 <script>
 import Canvas from "./components/Canvas.vue";
 import * as d3 from "d3";
-import axios from "axios";
 
 export default {
   name: "App",

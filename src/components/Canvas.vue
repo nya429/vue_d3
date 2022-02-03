@@ -1,7 +1,8 @@
 <template>
   <div>
     <h2>Data Visulization HW1</h2>
-    <h3>Breakfast Cereal</h3>
+    <strong>Yue Song</strong> - song.yue1@northeastern.edu
+    <h3>Breakfast Cereal Data Set</h3>
     <p>
       This data set contains nutritional information for 77 different breakfast
       cereals. It was used for the 1993 Statistical Graphics Exposition as a
@@ -9,7 +10,7 @@
       is from the nutritional labels and is in CSV format.
     </p>
     <p>
-      This data was retrieved from
+      This data set was retrieved from
       <a
         href="https://www.idvbook.com/downloads/data-sets/the-breakfast-cereal-data-set/index.html"
         >here</a
@@ -94,14 +95,14 @@ export default {
         left: 30,
       },
       marginSlop: {
-        top: 20,
+        top: 60,
         right: 300,
         bottom: 40,
         left: 300,
       },
       marginBand: { top: 20, right: 250, bottom: 0, left: 250 },
       base: {
-        height: 600,
+        height: 650,
         width: 1400,
       },
       rendered: false,
