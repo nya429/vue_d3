@@ -6,8 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "clean": "aws --profile yue s3 rm s3://uat.nasu.fun --recursive",
-    "deploy": "aws --profile yue s3 cp build/ s3://uat.nasu.fun --recursive"
+    "clean": "aws s3 rm s3://dvhw --recursive",
+    "deploy": "aws s3 cp dist/ s3://dvhw --recursive"
   },
   "dependencies": {
     "babel-preset-es2015": "^6.24.1",

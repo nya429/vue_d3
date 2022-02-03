@@ -27,7 +27,8 @@
           value="STACK"
           v-model="chartType"
         />
-        <label for="huey">Stacked Bar</label>
+        <label for="stack">Stacked Bar</label>
+        <span>&nbsp;</span>
         <input
           type="radio"
           id="band"
@@ -35,7 +36,8 @@
           value="BAND"
           v-model="chartType"
         />
-        <label for="huey">Color Band</label>
+        <label for="band">Heat Map</label>
+        <span>&nbsp;</span>
         <input
           type="radio"
           id="slop"
@@ -43,7 +45,7 @@
           value="SLOP"
           v-model="chartType"
         />
-        <label for="huey">Slop</label>
+        <label for="slop">Slop</label>
         <!-- <button @click="showStack">Stack</button>
         <button @click="showBand">Band</button>
         <button @click="showSlop">Slop</button> -->
@@ -368,7 +370,7 @@ export default {
           thatSvg
             .selectAll(".g-line path")
             .filter((d, idx) => i === idx)
-            .attr("stroke", "red")
+            .attr("stroke", "blue")
             .style("opacity", 1)
             .attr("stroke-width", 3);
         })
@@ -842,7 +844,7 @@ a {
 }
 p {
   text-align: left;
-  width: 500px;
+  width: 80%;
   padding: 10px;
   margin: auto;
 }
