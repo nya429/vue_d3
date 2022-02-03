@@ -41,7 +41,7 @@ export default {
       const raw = await d3.text("cereal.csv");
       const textString = raw
         .split("\n")
-        .slice(0, 15)
+        .slice(0, 18)
         .filter(s => !s.includes("-1"))
         .join("\n");
       const headers = this.variableNames.join("\t") + "\n";
