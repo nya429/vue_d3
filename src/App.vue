@@ -16,9 +16,9 @@ export default {
   data() {
     return {
       variableNames: [
-        "name",
-        "mfr",
-        "type",
+        "Name",
+        "Manufacture",
+        "Type",
         "Calories",
         "Protein",
         "Fat",
@@ -26,11 +26,11 @@ export default {
         "Fiber",
         "Carbohydrates",
         "Sugars",
-        "shelf",
+        "Shelf",
         "Potassium",
-        "Vitamins",
-        "weight",
-        "cups"
+        "Vitamins&Minerals",
+        "Weight/Serving",
+        "Cup/Serving"
       ],
       csv_data: []
     };
@@ -53,6 +53,7 @@ export default {
   },
   async beforeMount() {
     const raw_data = await this.loadData();
+    console.log(raw_data)
     this.csv_data = raw_data;
     // console.log("CSV loaded", this.csv_data);
   }

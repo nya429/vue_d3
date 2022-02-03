@@ -112,6 +112,9 @@ export default {
       react: [],
       checkedVariables: [],
       variableList: [
+        // "Name",
+        // "Manufacture",
+        // "Type",
         "Calories",
         "Protein",
         "Fat",
@@ -119,8 +122,11 @@ export default {
         "Fiber",
         "Carbohydrates",
         "Sugars",
+        // "Shelf",
         "Potassium",
-        // "Vitamins"
+        // "Vitamins&Minerals",
+        // "Weight/Serving",
+        // "Cup/Serving"
       ],
       svg: null,
     };
@@ -137,7 +143,7 @@ export default {
       if (this.rendered) this.reRenderStackChart();
     },
     chartType(val) {
-      this.clearAll()
+      this.clearAll();
       switch (val) {
         case "STACK":
           this.renderStackChart();
@@ -146,8 +152,8 @@ export default {
           this.renderSlopChart();
           return;
         case "BAND":
-           this.renderBandChart();
- 
+          this.renderBandChart();
+
           return;
       }
     },
@@ -242,7 +248,7 @@ export default {
             return {
               type: this.variableList[i],
               value: d,
-              brand: this.csvData[idx]["name"],
+              brand: this.csvData[idx]["Name"],
             };
           });
         })
@@ -414,7 +420,7 @@ export default {
 
         Tooltip.html(
           "Brand: " +
-            d["name"] +
+            d["Name"] +
             "<br>" +
             "<strong>" +
             d.type +
@@ -453,12 +459,12 @@ export default {
               type: this.variableList[i],
               value: d,
               raw_value: this.csvData[idx][this.variableList[i]],
-              name: this.csvData[idx]["name"],
+              name: this.csvData[idx]["Name"],
             };
           });
         })
         .flat();
-
+        
       const x = d3
         .scaleBand(this.variableList, [
           this.marginBand.left,
@@ -468,7 +474,7 @@ export default {
 
       const y = d3
         .scaleBand(
-          this.csvData.map((d) => d.name),
+          this.csvData.map((d) => d.Name),
           [this.marginBand.top, this.base.height - this.marginBand.bottom]
         )
         .round(true);
@@ -621,7 +627,7 @@ export default {
             d3
               .axisBottom(x)
               .tickSizeOuter(0)
-              .tickFormat((i) => this.csvData[i]["name"])
+              .tickFormat((i) => this.csvData[i]["Name"])
           )
           .selectAll("text")
           .style("text-anchor", "end")
@@ -654,7 +660,7 @@ export default {
           const idx = group.indexOf(d);
           Tooltip.html(
             "Brand: " +
-              csvData[idx]["name"] +
+              csvData[idx]["Name"] +
               "<br>" +
               "<strong>" +
               key +
