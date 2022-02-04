@@ -4,47 +4,25 @@
     <strong>Yue Song</strong> - song.yue1@northeastern.edu
     <h3>Breakfast Cereal Data Set</h3>
     <p>
-      This data set contains nutritional information for 77 different breakfast
-      cereals. It was used for the 1993 Statistical Graphics Exposition as a
-      challenge data set. We retrieved this data from StatLib at CMU. The data
-      is from the nutritional labels and is in CSV format.
+      This data set contains nutritional information for 77 different breakfast cereals. It was used for the 1993 Statistical Graphics Exposition as a challenge data set. We retrieved this data from StatLib at CMU. The data is from the nutritional labels and is in CSV format.
     </p>
     <p>
       This data set was retrieved from
-      <a
-        href="https://www.idvbook.com/downloads/data-sets/the-breakfast-cereal-data-set/index.html"
-        >here</a
-      >
+      <a href="https://www.idvbook.com/downloads/data-sets/the-breakfast-cereal-data-set/index.html">here</a>
     </p>
     <br />
     <ul>
-      <li><h4>Select a Visulization Type to Display</h4></li>
       <li>
-        <input
-          type="radio"
-          id="stack"
-          name="stack"
-          value="STACK"
-          v-model="chartType"
-        />
+        <h4>Select a Visulization Type to Display</h4>
+      </li>
+      <li>
+        <input type="radio" id="stack" name="stack" value="STACK" v-model="chartType" />
         <label for="stack">Stacked Bar</label>
         <span>&nbsp;</span>
-        <input
-          type="radio"
-          id="band"
-          name="band"
-          value="BAND"
-          v-model="chartType"
-        />
+        <input type="radio" id="band" name="band" value="BAND" v-model="chartType" />
         <label for="band">Heat Map</label>
         <span>&nbsp;</span>
-        <input
-          type="radio"
-          id="slop"
-          name="slop"
-          value="SLOP"
-          v-model="chartType"
-        />
+        <input type="radio" id="slop" name="slop" value="SLOP" v-model="chartType" />
         <label for="slop">Slop</label>
         <!-- <button @click="showStack">Stack</button>
         <button @click="showBand">Band</button>
@@ -60,17 +38,10 @@
           <strong>Check Variable to Sort</strong>
         </li>
         <li v-for="vriable in variableList" :key="vriable">
-          <input
-            type="checkbox"
-            v-bind:disabled="
+          <input type="checkbox" v-bind:disabled="
               !rendered ||
               (checkedVariables.length === 1 && checkedVariables[0] === vriable)
-            "
-            v-bind:id="vriable"
-            v-bind:name="vriable"
-            v-bind:value="vriable"
-            v-model="checkedVariables"
-          />
+            " v-bind:id="vriable" v-bind:name="vriable" v-bind:value="vriable" v-model="checkedVariables" />
           <label v-bind:for="vriable">{{ vriable }}</label>
         </li>
       </ul>
@@ -91,21 +62,28 @@ export default {
     return {
       chartType: "NA",
       margin: {
-        top: 0,
-        right: 10,
+        top: 50,
+        right: 200,
         bottom: 200,
-        left: 30,
+        left: 200
       },
       marginSlop: {
         top: 60,
         right: 300,
         bottom: 40,
-        left: 300,
+        left: 300
       },
-      marginBand: { top: 20, right: 250, bottom: 0, left: 250 },
+      marginBand: {
+        top: 100,
+        right: 250,
+        bottom: 0,
+        left: 250,
+        bandWidth: 200,
+        bandHeight: 15
+      },
       base: {
         height: 650,
-        width: 1400,
+        width: 1400
       },
       rendered: false,
       xz: 0,
@@ -123,17 +101,27 @@ export default {
         "Carbohydrates",
         "Sugars",
         // "Shelf",
-        "Potassium",
+        "Potassium"
         // "Vitamins&Minerals",
         // "Weight/Serving",
         // "Cup/Serving"
       ],
-      svg: null,
+      variableUnit: {
+        Calories: "",
+        Protein: "g",
+        Fat: "g",
+        Sodium: "mg",
+        Fiber: "g",
+        Carbohydrates: "g",
+        Sugars: "g",
+        Potassium: "mg"
+      },
+      svg: null
     };
   },
   props: {
     csvData: Array,
-    variables: Array,
+    variables: Array
   },
   watch: {
     csvData(newVal, oldVal) {
@@ -156,7 +144,7 @@ export default {
 
           return;
       }
-    },
+    }
   },
   methods: {
     renderSlopChart() {
@@ -199,17 +187,20 @@ export default {
       };
 
       let thatSvg = this.svg;
-      const mouseover = function () {
+      const mouseover = function() {
         // Tooltip.style("opacity", 1);
         // console.log(d);
         // const key = d[3];
         // const groupp = d3.select(this.parentNode).datum();
         // console.log(key, groupp);
-        d3.select(this).style("opacity", "1").attr("stroke-width", 3);
+        d3
+          .select(this)
+          .style("opacity", "1")
+          .attr("stroke-width", 3);
         // .style("opacity", 1);
       };
-      const mousemove = function (e, d) {};
-      const mouseleave = function () {
+      const mousemove = function(e, d) {};
+      const mouseleave = function() {
         // Tooltip.style("opacity", 0);
         thatSvg
           .selectAll(".g-line path")
@@ -222,7 +213,8 @@ export default {
           .style("opacity", 1)
           .attr("stroke", "none");
 
-        d3.select(this)
+        d3
+          .select(this)
           .style("opacity", 0.8)
           .attr("stroke-width", 1)
           .attr("stroke", "none");
@@ -230,16 +222,19 @@ export default {
 
       let data = [...this.csvData];
 
-      const yz = d3.range(this.variableList.length).map((i) => {
+      const yz = d3.range(this.variableList.length).map(i => {
         const key = this.variableList[i];
-        return this.csvData.map((d) => d[key]);
+        return this.csvData.map(d => d[key]);
       });
 
-      const yzNorm = yz.map((d) => {
-        let dp = d.map((d) => +d);
+      const yzNorm = yz.map(d => {
+        let dp = d.map(d => +d);
         let max = d3.max(dp);
-        let scale = d3.scaleLinear().domain([0, max]).range([0, 100]);
-        return dp.map((i) => Math.floor(scale(i)));
+        let scale = d3
+          .scaleLinear()
+          .domain([0, max])
+          .range([0, 100]);
+        return dp.map(i => Math.floor(scale(i)));
       });
 
       const flattenData = yzNorm
@@ -248,24 +243,24 @@ export default {
             return {
               type: this.variableList[i],
               value: d,
-              brand: this.csvData[idx]["Name"],
+              brand: this.csvData[idx]["Name"]
             };
           });
         })
         .flat();
-      let X = d3.map(flattenData, (d) => d.type);
-      let Y = d3.map(flattenData, (d) => d.value);
-      let Z = d3.map(flattenData, (d) => d.brand);
+      let X = d3.map(flattenData, d => d.type);
+      let Y = d3.map(flattenData, d => d.value);
+      let Z = d3.map(flattenData, d => d.brand);
 
-      let xDomain = d3.map(flattenData, (d) => d.type);
-      let yDomain = d3.extent(d3.map(flattenData, (d) => d.value));
-      let zDomain = d3.map(flattenData, (d) => d.brand);
+      let xDomain = d3.map(flattenData, d => d.type);
+      let yDomain = d3.extent(d3.map(flattenData, d => d.value));
+      let zDomain = d3.map(flattenData, d => d.brand);
       xDomain = new d3.InternSet(xDomain);
       zDomain = new d3.InternSet(zDomain);
 
       const I = d3
         .range(X.length)
-        .filter((i) => xDomain.has(X[i]) && zDomain.has(Z[i]));
+        .filter(i => xDomain.has(X[i]) && zDomain.has(Z[i]));
 
       const xScale = d3
         .scalePoint()
@@ -278,7 +273,7 @@ export default {
         .domain(yDomain)
         .range([
           this.base.height - this.marginSlop.bottom,
-          this.marginSlop.top,
+          this.marginSlop.top
         ]);
 
       const xAxis = d3.axisTop(xScale).tickSizeOuter(2);
@@ -288,15 +283,15 @@ export default {
         .line()
         // .defined(i => D[i])
         .curve(d3.curveLinear)
-        .x((i) => xScale(X[i]))
-        .y((i) => yScale(Y[i]));
+        .x(i => xScale(X[i]))
+        .y(i => yScale(Y[i]));
 
       this.svg
         .append("g")
         .attr("transform", `translate(0, ${this.marginSlop.top - 30})`)
         .style("font", "14px times")
         .call(xAxis)
-        .call((g) => g.select(".domain").remove());
+        .call(g => g.select(".domain").remove());
 
       this.svg
         .append("g")
@@ -308,13 +303,13 @@ export default {
         .attr("stroke-width", 1)
         .attr("stroke-opacity", 0.5)
         .selectAll("path")
-        .data(d3.group(I, (i) => Z[i]))
+        .data(d3.group(I, i => Z[i]))
         .join("path")
         .style("mix-blend-mode", "multiply")
         .attr("d", ([, I]) => line(I))
         .style("opacity", 0.5);
 
-      const Ix = d3.group(I, (i) => X[i]);
+      const Ix = d3.group(I, i => X[i]);
 
       for (const [i, x] of [...xDomain].entries()) {
         const text = this.svg
@@ -328,13 +323,11 @@ export default {
           .data(Ix.get(x))
           .join("text")
           .attr("x", xScale(x))
-          .call(dodgeAttr, "y", (i) => yScale(Y[i]), 15)
+          .call(dodgeAttr, "y", i => yScale(Y[i]), 15)
           .text(
             i === 0
-              ? (i) => `${Z[i]} ${Y[i]}`
-              : i === xDomain.size - 1
-              ? (i) => `${Y[i]} ${Z[i]}`
-              : (i) => Y[i]
+              ? i => `${Z[i]} ${Y[i]}`
+              : i === xDomain.size - 1 ? i => `${Y[i]} ${Z[i]}` : i => Y[i]
           )
           // .attr("fill", "none")
           .style("font-size", "0.7em")
@@ -352,10 +345,14 @@ export default {
         // .attr("stroke-width", 1);
       }
 
-      d3.selectAll(".g-text text")
-        .on("mouseover", function (e, i) {
+      d3
+        .selectAll(".g-text text")
+        .on("mouseover", function(e, i) {
           // Tooltip.html("Brand: ").style("opacity", 1);
-          d3.select(this).attr("stroke", "black").style("opacity", 1);
+          d3
+            .select(this)
+            .attr("stroke", "black")
+            .style("opacity", 1);
           const datalen = data.length;
           thatSvg
             .selectAll(".g-text text")
@@ -403,15 +400,14 @@ export default {
       }
 
       const thatSvg = this.svg;
-      const mouseover = function () {
+      const mouseover = function() {
         Tooltip.style("opacity", 1);
         // d3.selectAll(".g-band rect")
         //   .filter((d) => d !== this)
         //   .attr("opacity", 0.5);
       };
-
-      const mousemove = function (e, d) {
-        // console.log(e, d);
+      const variableUnit = this.variableUnit;
+      const mousemove = function(e, d) {
         d3.select(this).style("stroke", "#555");
         Tooltip.style("left", d3.pointer(e)[0] + 70 + "px").style(
           "top",
@@ -419,17 +415,22 @@ export default {
         );
 
         Tooltip.html(
-          "Brand: " +
-            d["Name"] +
-            "<br>" +
-            "<strong>" +
+          "<strong>" +
+            d.name +
+            "</strong><br>" +
             d.type +
+            ": </strong>" +
+            d.raw_value +
+            variableUnit[d.type] +
             "</strong>" +
-            ": " +
-            d.raw_value
+            " <br> <br> Serving size <strong>" +
+            d.cup +
+            " </strong> cup (<strong>" +
+            d.weight +
+            "oz.</strong>) "
         ).style("opacity", 1);
       };
-      const mouseleave = function () {
+      const mouseleave = function() {
         Tooltip.style("opacity", 0);
         d3.select(this).style("stroke", "none");
         // d3.selectAll(".g-band rect").attr("opacity", 1);
@@ -439,17 +440,20 @@ export default {
       const numCases = this.csvData.length;
       this.xz = d3.range(numCases);
 
-      const yz = d3.range(numVariables).map((i) => {
+      const yz = d3.range(numVariables).map(i => {
         const key = this.variableList[i];
-        return this.csvData.map((d) => d[key]);
+        return this.csvData.map(d => d[key]);
       });
 
-      const yzNorm = yz.map((d) => {
-        let dp = d.map((d) => +d);
+      const yzNorm = yz.map(d => {
+        let dp = d.map(d => +d);
         let max = d3.max(dp);
         let min = d3.min(dp);
-        let scale = d3.scaleLinear().domain([min, max]).range([0, 100]);
-        return dp.map((i) => Math.floor(scale(i)));
+        let scale = d3
+          .scaleLinear()
+          .domain([min, max])
+          .range([0, 100]);
+        return dp.map(i => Math.floor(scale(i)));
       });
       // console.log(yzNorm);
       const flattenData = yzNorm
@@ -460,26 +464,28 @@ export default {
               value: d,
               raw_value: this.csvData[idx][this.variableList[i]],
               name: this.csvData[idx]["Name"],
+              cup: this.csvData[idx]["Cup/Serving"],
+              weight: this.csvData[idx]["Weight/Serving"]
             };
           });
         })
         .flat();
-        
+
       const x = d3
         .scaleBand(this.variableList, [
           this.marginBand.left,
-          this.base.width - this.marginBand.right,
+          this.base.width - this.marginBand.right
         ])
         .round(true);
 
       const y = d3
-        .scaleBand(
-          this.csvData.map((d) => d.Name),
-          [this.marginBand.top, this.base.height - this.marginBand.bottom]
-        )
+        .scaleBand(this.csvData.map(d => d.Name), [
+          this.marginBand.top,
+          this.base.height - this.marginBand.bottom
+        ])
         .round(true);
 
-      let [min, max] = d3.extent(flattenData, (d) => d.value);
+      let [min, max] = d3.extent(flattenData, d => d.value);
       const z = d3.scaleSequential(
         [-0.5 * min, 1.5 * max],
         d3.interpolateBlues
@@ -493,20 +499,20 @@ export default {
       //   return
       // };
 
-      const xAxis = (g) =>
+      const xAxis = g =>
         g
           .attr("transform", `translate(0, ${this.marginBand.top})`)
           .style("font", "13px times")
-          .call(d3.axisTop(x).tickFormat((d) => d))
-          .call((g) => g.select(".domain").remove());
+          .call(d3.axisTop(x).tickFormat(d => d))
+          .call(g => g.select(".domain").remove());
 
-      const yAxis = (g) =>
+      const yAxis = g =>
         g
           .attr("transform", `translate(${this.marginBand.left},0)`)
           .attr("class", "g-yAxis")
           .style("font", "13px times")
-          .call(d3.axisLeft(y).tickFormat((d) => d))
-          .call((g) => g.select(".domain").remove());
+          .call(d3.axisLeft(y).tickFormat(d => d))
+          .call(g => g.select(".domain").remove());
 
       this.svg.append("g").call(xAxis);
       this.svg.append("g").call(yAxis);
@@ -517,17 +523,74 @@ export default {
         .selectAll("rect")
         .data(flattenData)
         .join("rect")
-        .attr("id", (d) => d.name)
-        .attr("x", (d) => x(d.type))
-        .attr("y", (d) => y(d.name))
+        .attr("id", d => d.name)
+        .attr("x", d => x(d.type))
+        .attr("y", d => y(d.name))
         .attr("width", x.bandwidth() - 1)
         .attr("height", y.bandwidth() - 1)
-        .attr("fill", (d) => z(d.value))
+        .attr("fill", d => z(d.value))
         .on("mouseover", mouseover)
         .on("mousemove", mousemove)
         .on("mouseleave", mouseleave);
       //           (d) => `${formatDate(d.date)}
       // ${formatUsage(d.usage)} kW`
+
+      this.svg
+        .append("g")
+        .attr("class", "g-legend")
+        .attr(
+          "transform",
+          `translate( ${this.base.width -
+            this.marginBand.left -
+            this.marginBand.bandWidth}, 30)`
+        );
+
+      const legend = this.svg.select(".g-legend");
+      const grad = legend
+        .append("defs")
+        .attr("transform", `translate(${this.marginBand.left}, 20)`)
+        .append("linearGradient")
+        .attr("id", "myGradient");
+
+      grad
+        .selectAll("stop")
+        .data(d3.range(101))
+        .enter()
+        .append("stop")
+        .attr("offset", d => d + "%")
+        .attr("stop-color", d => z(d));
+
+      legend
+        .append("rect")
+        .attr("width", this.marginBand.bandWidth)
+        .attr("height", this.marginBand.bandHeight)
+        .style("fill", "url(#myGradient)");
+
+      const legendXTicks = d3
+        .range(101)
+        .filter(f => f % 25 === 0)
+        .map(d => d);
+      const xScale = d3
+        .scaleLinear()
+        .range([0, this.marginBand.bandWidth])
+        .domain([0, 100]);
+
+      var legendXAxis = d3
+        .axisBottom(xScale)
+        .tickSize(this.marginBand.bandHeight)
+        .tickValues(legendXTicks);
+
+      legend
+        .append("g")
+        .call(legendXAxis)
+        .select(".domain")
+        .remove();
+
+      legend
+        .append("text")
+        .attr("y", -20)
+        .text("Normalized Varaible 0 ~ 100")
+        .style("font-size", "10");
     },
     renderStackChart() {
       /** Tooltip */
@@ -560,13 +623,13 @@ export default {
       //   d3.select(this).style("stroke", "black");
       //   // .style("opacity", 1);
       // };
-      const mousemove = function (e, d) {
+      const mousemove = function(e, d) {
         Tooltip.style("left", d3.pointer(e)[0] + 70 + "px").style(
           "top",
           d3.pointer(e)[1] + "px"
         );
       };
-      const mouseleave = function () {
+      const mouseleave = function() {
         Tooltip.style("opacity", 0);
         d3.select(this).style("stroke", "none");
         // .style("opacity", 0.8);
@@ -580,16 +643,19 @@ export default {
 
       this.xz = d3.range(numCases);
 
-      let yz = d3.range(numVariables).map((i) => {
+      let yz = d3.range(numVariables).map(i => {
         const key = variableNames[i];
-        return this.csvData.map((d) => d[key]);
+        return this.csvData.map(d => d[key]);
       });
 
-      yz = yz.map((d) => {
-        let dp = d.map((d) => +d);
+      yz = yz.map(d => {
+        let dp = d.map(d => +d);
         let max = d3.max(dp);
-        let scale = d3.scaleLinear().domain([0, max]).range([0, 100]);
-        return dp.map((i) => Math.floor(scale(i)));
+        let scale = d3
+          .scaleLinear()
+          .domain([0, max])
+          .range([0, 100]);
+        return dp.map(i => Math.floor(scale(i)));
       });
 
       const y01z = d3
@@ -599,8 +665,8 @@ export default {
           data.map(([y0, y1], idx) => [y0, y1, i, variableNames[i], idx])
         );
 
-      const yMax = d3.max(yz, (y) => d3.max(y));
-      const y1Max = d3.max(y01z, (y) => d3.max(y, (d) => d[1]));
+      const yMax = d3.max(yz, y => d3.max(y));
+      const y1Max = d3.max(y01z, y => d3.max(y, d => d[1]));
 
       let x = d3
         .scaleBand()
@@ -614,8 +680,8 @@ export default {
         .range([this.base.height - this.margin.bottom, this.margin.top]);
 
       const z = d3.scaleOrdinal(d3.schemePaired).domain([-1, numVariables]);
-      console.log(numVariables);
-      let xAxis = (svg) =>
+      // console.log(numVariables);
+      let xAxis = svg =>
         svg
           .append("g")
           .attr("class", "xtick")
@@ -627,16 +693,17 @@ export default {
             d3
               .axisBottom(x)
               .tickSizeOuter(0)
-              .tickFormat((i) => this.csvData[i]["Name"])
+              .tickFormat(i => this.csvData[i]["Name"])
           )
           .selectAll("text")
           .style("text-anchor", "end")
           .attr("dx", "-.8em")
           .attr("dy", ".15em")
+          .style("font-size", "1em")
           .attr("transform", "rotate(-65)");
 
       const svg = d3.select("#canvas");
-
+      const variableUnit = this.variableUnit;
       this.rect = this.svg
         .append("g")
         .attr("class", "group")
@@ -647,26 +714,32 @@ export default {
         .attr("class", (d, i) => variableNames[i])
         .attr("fill", (d, i) => z(i))
         .selectAll("rect")
-        .data((d) => d)
+        .data(d => d)
         .enter()
         .append("rect")
         .attr("x", (d, i) => x(i))
         .attr("y", this.base.height - this.margin.bottom)
         .attr("width", x.bandwidth())
         .attr("height", 0)
-        .on("mouseover", function (e, d) {
+        .on("mouseover", function(e, d) {
           const key = d[3];
           const group = d3.select(this.parentNode).datum();
           const idx = group.indexOf(d);
           Tooltip.html(
-            "Brand: " +
+            "<strong>" +
               csvData[idx]["Name"] +
-              "<br>" +
-              "<strong>" +
+              "</strong><br>" +
               key +
+              ": <strong>" +
+              csvData[d[4]][key] +
+              " " +
+              variableUnit[key] +
               "</strong>" +
-              ": " +
-              csvData[d[4]][key]
+              " <br> <br> Serving size <strong>" +
+              csvData[idx]["Cup/Serving"] +
+              " </strong> cup (<strong>" +
+              csvData[idx]["Weight/Serving"] +
+              "oz.</strong>) "
           ).style("opacity", 1);
 
           d3.select(this).style("stroke", "black");
@@ -679,12 +752,56 @@ export default {
 
       y.domain([0, y1Max]);
 
+      this.svg.append("g").attr("class", "g-legend");
+
+      const legend = this.svg
+        .select(".g-legend")
+        .selectAll("g")
+        .data(this.variableList)
+        .enter()
+        .append("g");
+
+      legend
+        .attr("class", "legned")
+        .attr(
+          "transform",
+          (d, i) =>
+            `translate(${this.base.width - this.margin.right + 50}, ${10 +
+              (this.variableList.length - i) * 25})`
+        );
+      // .attr("x", (d, i) => 100 * i + 100)
+      // .attr("y", 5);
+
+      legend
+        .append("rect")
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("fill", (d, i) => z(i));
+
+      legend
+        .append("text")
+        .text(d => d)
+        .attr("x", 23)
+        .attr("y", 15)
+        .attr("fill", (d, i) => z(i));
+
+      // this.svg
+      //   .select(".legend")
+      //   .selectAll("text")
+      //   .data(this.variableList)
+      //   .enter()
+      //   .append("text")
+      //   .attr("x", (d, i) => 100 * i + 100)
+      //   .attr("y", 5)
+      //   .text(d => d);
+
+      // 100 is where the first dot appears. 25 is the distance between dots
       this.rect
         .transition()
         .duration(500)
         .delay((d, i) => i * 20)
-        .attr("y", (d) => y(d[1]))
-        .attr("height", (d) => y(d[0]) - y(d[1]))
+        .attr("y", d => y(d[1]))
+        .attr("height", d => y(d[0]) - y(d[1]))
         .transition()
         // .attr("x", (d, i) => x(i))
         // .attr("width", x.bandwidth())
@@ -697,26 +814,29 @@ export default {
       const keys = this.variableList;
       const checkedKeys = this.checkedVariables;
 
-      let yz = d3.range(numVariables).map((i) => {
+      let yz = d3.range(numVariables).map(i => {
         const key = this.variableList[i];
         if (checkedKeys.includes(key)) {
-          return this.csvData.map((d) => d[key]);
+          return this.csvData.map(d => d[key]);
         } else {
-          return this.csvData.map((d) => 0);
+          return this.csvData.map(d => 0);
         }
       });
 
-      yz = yz.map((d) => {
-        let dp = d.map((d) => +d);
+      yz = yz.map(d => {
+        let dp = d.map(d => +d);
         let max = d3.max(dp);
         if (max === 0) {
-          return dp.map((i) => 0);
+          return dp.map(i => 0);
         }
-        let scale = d3.scaleLinear().domain([0, max]).range([0, 100]);
-        return dp.map((i) => Math.floor(scale(i)));
+        let scale = d3
+          .scaleLinear()
+          .domain([0, max])
+          .range([0, 100]);
+        return dp.map(i => Math.floor(scale(i)));
       });
 
-      console.log(yz);
+      // console.log(yz);
       const y01z = d3
         .stack()
         .keys(d3.range(numVariables))(d3.transpose(yz)) // stacked yz
@@ -727,13 +847,13 @@ export default {
       this.xz = d3.range(this.xz.length).sort((a, b) => {
         var diff =
           d3.sum(
-            checkedKeys.map((key) => {
+            checkedKeys.map(key => {
               let idx = this.variableList.indexOf(key);
               return yz[idx][a];
             })
           ) -
           d3.sum(
-            checkedKeys.map((key) => {
+            checkedKeys.map(key => {
               let idx = this.variableList.indexOf(key);
               return yz[idx][b];
             })
@@ -747,8 +867,8 @@ export default {
         .rangeRound([this.margin.left, this.base.width - this.margin.right])
         .padding(0.08);
 
-      const yMax = d3.max(yz, (y) => d3.max(y));
-      const y1Max = d3.max(y01z, (y) => d3.max(y, (d) => d[1]));
+      const yMax = d3.max(yz, y => d3.max(y));
+      const y1Max = d3.max(y01z, y => d3.max(y, d => d[1]));
 
       let y = d3
         .scaleLinear()
@@ -760,11 +880,11 @@ export default {
         .selectAll("g")
         .data(y01z)
         .selectAll("rect")
-        .data((d) => d)
+        .data(d => d)
         .transition()
         .duration(500)
-        .attr("y", (d) => y(d[1]))
-        .attr("height", (d) => y(d[0]) - y(d[1]));
+        .attr("y", d => y(d[1]))
+        .attr("height", d => y(d[0]) - y(d[1]));
       // .transition();
 
       this.rect
@@ -816,12 +936,12 @@ export default {
     clearAll() {
       this.checkedVariables = this.variableList;
       d3.selectAll("svg > *").remove();
-    },
+    }
   },
   mounted() {
     this.checkedVariables = this.variableList;
     this.renderBase();
-  },
+  }
 };
 </script>
 
