@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h2>Data Visulization HW1</h2>
-    <strong>Yue Song</strong> - song.yue1@northeastern.edu
+    <h2>HW1</h2>
+    <br />
     <h3>Breakfast Cereal Data Set</h3>
     <p>
       This data set contains nutritional information for 77 different breakfast cereals. It was used for the 1993 Statistical Graphics Exposition as a challenge data set. We retrieved this data from StatLib at CMU. The data is from the nutritional labels and is in CSV format.
@@ -57,7 +57,7 @@
 import * as d3 from "d3";
 
 export default {
-  name: "Canvas",
+  name: "HW1",
   data() {
     return {
       chartType: "NA",
@@ -116,12 +116,30 @@ export default {
         Sugars: "g",
         Potassium: "mg"
       },
-      svg: null
+      svg: null,
+      csvData: [],
+      defaultVariableNames: [
+        "Name",
+        "Manufacture",
+        "Type",
+        "Calories",
+        "Protein",
+        "Fat",
+        "Sodium",
+        "Fiber",
+        "Carbohydrates",
+        "Sugars",
+        "Shelf",
+        "Potassium",
+        "Vitamins&Minerals",
+        "Weight/Serving",
+        "Cup/Serving"
+      ]
     };
   },
   props: {
-    csvData: Array,
-    variables: Array
+    // csvData: Array,
+    // variables: Array
   },
   watch: {
     csvData(newVal, oldVal) {
@@ -147,6 +165,16 @@ export default {
     }
   },
   methods: {
+    async loadData() {
+      const raw = await d3.text("cereal.csv");
+      const textString = raw
+        .split("\n")
+        .slice(0, 18)
+        .filter(s => !s.includes("-1"))
+        .join("\n");
+      const headers = this.defaultVariableNames.join("\t") + "\n";
+      return await d3.tsvParse(headers + textString.replaceAll(" ", "\t"));
+    },
     renderSlopChart() {
       // const Tooltip = d3
       //   .select("#canvas-container")
@@ -941,6 +969,11 @@ export default {
   mounted() {
     this.checkedVariables = this.variableList;
     this.renderBase();
+  },
+  async beforeMount() {
+    const raw_data = await this.loadData();
+    this.csvData = raw_data;
+    console.log("CSV loaded", this.csvData);
   }
 };
 </script>
