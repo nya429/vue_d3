@@ -925,7 +925,7 @@ export default {
               "%";
 
         Tooltip.html(text).style("opacity", 1);
-        console.log(d3.select(this))
+        // console.log(d3.select(this))
         d3.select(this).style("stroke", "black");
 
         svg
@@ -998,6 +998,7 @@ export default {
     }
   },
   async mounted() {
+    this.clearAll() 
     // console.log("mount");
     this.csvData2 = await this.loadCsv();
 
