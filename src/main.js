@@ -7,8 +7,9 @@ import HW2 from './components/HW2.vue'
 const router = createRouter({
     history: createWebHistory(),
     routes: [
-        {path: '/', component: HW1},
-        {path: '/hw2', component: HW2}
+        { path: '/', redirect: '/hw1' },
+        { path: '/hw1', component: HW1 },
+        { path: '/hw2', component: HW2 }
     ]
 })
 const app = createApp(App);
