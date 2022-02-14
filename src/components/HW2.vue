@@ -9,14 +9,15 @@
       <input type="radio" id="band" name="band" value="Q3" v-model="Q" />
       <label for="band">Question 3</label>
     </li>
-    <br>
+    <br> <br>
     <div v-if="Q==='Q1'" id='Q1'>
-      <h3>Location Platforms</h3>
+      <h3>Redesign of Location Platforms</h3>
       <br />
 
     </div>
 
     <div v-if="Q==='Q3'" id='Q3'>
+      <h3>Paper Acceptance Rate for the Main AI Conferences</h3>
       <ul>
         <li>
           <h4>Scale Type</h4>
@@ -769,8 +770,8 @@ export default {
 
       this.yMax1 = yMax1;
       this.yMax2 = yMax2;
-      
-      let yMax = this.chartType === 'number' ? yMax1 : yMax2;
+
+      let yMax = this.chartType === "number" ? yMax1 : yMax2;
 
       let x = d3
         .scaleBand()
@@ -845,47 +846,6 @@ export default {
         // .style("opacity", 0.8);
       };
 
-      const mouseover = function(e, d) {
-        const key = d[3];
-        const percent = d[7];
-        const sum = d[6];
-        const idx = d[4];
-        const type = d[8];
-        let text =
-          type === "percent"
-            ? "<strong>" +
-              percent +
-              "%</strong><br>" +
-              csvData[idx][key] +
-              " out of " +
-              sum
-            : "<strong>" +
-              csvData[idx][key] +
-              "</strong>" +
-              " out of " +
-              "<strong>" +
-              sum +
-              "</strong><br>" +
-              percent +
-              "%";
-
-        Tooltip.html(text).style("opacity", 1);
-
-        d3.select(this).style("stroke", "black");
-
-        svg
-          .select(".xtick")
-          .selectAll(".tick")
-          .style("opacity", (d, i) => (i === idx ? 1 : 0.4));
-
-        variableNames.map(key => {
-          svg
-            .select(`.${key}`)
-            .selectAll("rect")
-            .style("opacity", (d, i) => (i === idx ? 1 : 0.4));
-        });
-      };
-
       this.svg.append("g").attr("class", "g-legend");
 
       const legend = this.svg
@@ -920,7 +880,7 @@ export default {
 
       let type = this.chartType;
 
-      let ydata =  type === 'number' ? y01z :  y02z;
+      let ydata = type === "number" ? y01z : y02z;
 
       this.rect = this.svg
         .append("g")
@@ -940,7 +900,46 @@ export default {
         .attr("y", this.base.height - this.margin.bottom)
         .attr("width", x.bandwidth())
         .attr("height", 0)
-        .on("mouseover", (e, d) => mouseover(e, d))
+        .on("mouseover", function(e, d) {
+        const key = d[3];
+        const percent = d[7];
+        const sum = d[6];
+        const idx = d[4];
+        const type = d[8];
+        let text =
+          type === "percent"
+            ? "<strong>" +
+              percent +
+              "%</strong><br>" +
+              csvData[idx][key] +
+              " out of " +
+              sum
+            : "<strong>" +
+              csvData[idx][key] +
+              "</strong>" +
+              " out of " +
+              "<strong>" +
+              sum +
+              "</strong><br>" +
+              percent +
+              "%";
+
+        Tooltip.html(text).style("opacity", 1);
+        console.log(d3.select(this))
+        d3.select(this).style("stroke", "black");
+
+        svg
+          .select(".xtick")
+          .selectAll(".tick")
+          .style("opacity", (d, i) => (i === idx ? 1 : 0.4));
+
+        variableNames.map(key => {
+          svg
+            .select(`.${key}`)
+            .selectAll("rect")
+            .style("opacity", (d, i) => (i === idx ? 1 : 0.4));
+        });
+      })
         .on("mousemove", (e, d) => mousemove(e, d))
         .on("mouseleave", mouseleave);
 
